@@ -1,6 +1,7 @@
 package com.StudentsManagementSystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,11 +17,12 @@ import org.springframework.stereotype.Controller;
 public class StudentController {
 	@Autowired
 	private StudentService service;
-	@GetMapping("/home")
-	
-	public String home() {
-		return "home"; // view page html file =>home.html
-	}
+
+	/*
+	 * @GetMapping("/home")
+	 * 
+	 * public String home() { return "home"; // view page html file =>home.html }
+	 */
 	@GetMapping("/students")
 	public String getAllStudents(Model model) {
 		model.addAttribute("students", service.getAllStudents());
@@ -34,6 +36,7 @@ public class StudentController {
 		
 		return "create-student";
 	}
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/students")
 	public String saveStudent(@ModelAttribute("student") Student student) {
 		service.saveStudent(student);
@@ -59,4 +62,6 @@ public class StudentController {
 		service.deleteById(id);
 		return  "redirect:/students";
 	}
+	
+	
 }
