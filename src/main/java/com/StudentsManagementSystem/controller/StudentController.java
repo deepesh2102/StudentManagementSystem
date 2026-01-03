@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.StudentsManagementSystem.entity.Student;
 import com.StudentsManagementSystem.service.StudentService;
 
-import org.springframework.ui.Model;
+import jakarta.validation.Valid;
 
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.stereotype.Controller;
 @Controller
 public class StudentController {
@@ -39,7 +41,10 @@ public class StudentController {
 	}
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/students")
-	public String saveStudent(@ModelAttribute("student") Student student) {
+	public String saveStudent(@Valid @ModelAttribute("student") Student student, BindingResult result) {
+		if (result.hasErrors()) {
+			return "create_student";
+		}
 		service.saveStudent(student);
 		return "redirect:/students";
 	}
@@ -57,7 +62,6 @@ public class StudentController {
 		existingStudent.setEmail(student.getEmail());
 		System.out.println("Updating student with id = " + student.getId());
 		service.saveStudent(existingStudent);
-		
 		
 		return  "redirect:/students";
 	}

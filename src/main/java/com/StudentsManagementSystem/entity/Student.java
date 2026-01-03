@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
+
 
 //import jakarta.persistence.*;
 
@@ -19,9 +22,13 @@ public class Student {
 	private long id;
 	
 	@Column(name = "first_name")
+	@NotBlank(message="First name is required")
 	private String firstName;
 	@Column(name = "last_name")
+	@NotBlank(message="Last name is required")
 	private String lastName;
+	@NotBlank(message="Email is required")
+	@Email(message="Please enter valid email")
 	private String Email;
 	public long getId() {
 		return id;
