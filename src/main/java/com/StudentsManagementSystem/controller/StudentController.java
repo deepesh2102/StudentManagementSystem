@@ -29,10 +29,11 @@ public class StudentController {
 		
 		return "students";
 	}
-	Student student = new Student(); // to hold the student data in this object
+	//Student student = new Student(); // to hold the student data in this object 
+	//Never use new object in controller as it's singleton will not work for multithreaded.
 	@GetMapping("students/new")	
 	public String CreateStudentForm(Model model) {
-		model.addAttribute("students", student);
+		model.addAttribute("student", new Student());
 		
 		return "create-student";
 	}
@@ -47,10 +48,14 @@ public class StudentController {
 		model.addAttribute("student", service.getById(id));
 		return "edit_student";
 	}
-	@PostMapping("students/edit/{id}")
+	@PostMapping("/students/edit/{id}")
 	public String UpdateStudent(@PathVariable int id, @ModelAttribute("student") Student student) {
-		Student existingStudent = student;// service.getById(id);
+		Student existingStudent = service.getById(id);//student;// service.getById(id);
 		
+		existingStudent.setFirstName(student.getFirstName());
+		existingStudent.setLastName(student.getLastName());
+		existingStudent.setEmail(student.getEmail());
+		System.out.println("Updating student with id = " + student.getId());
 		service.saveStudent(existingStudent);
 		
 		
